@@ -10,7 +10,8 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
+    {        if (!Schema::hasTable('users')) {
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('username');
@@ -20,7 +21,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-
+    }
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->foreignId('user_id')->nullable()->index();

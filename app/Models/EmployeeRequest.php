@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class EmployeeRequest extends Model
 {
 
-    protected $fillable = ['name', 'email','password',];
+    protected $fillable = ['email','password'];
 
+    protected $hidden = [
+        'password',
+    ];
+
+    protected $casts = [
+        'password' => 'hashed',
+    ];
 }

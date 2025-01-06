@@ -13,15 +13,15 @@ class EmployeeRequestController extends Controller
     public function register(Request $request)
     {
         $validated = Validator::make($request->all(), [
-            'email' => 'required|string|email|max:255|unique:employee_requests',
-            'password' => 'required|string|min:8|confirmed',
+            'email' => 'required|string|max:255|unique:employee_requests',
+            'password' => 'required|string|min:8',
         ]);
 
         if ($validated->fails()) {
             return response()->json(['errors' => $validated->errors()], 422);
         }
 
-        if (strpos($request->email, '@mrror') !== false) {
+        if (strpos($request->email, '@mroor') !== false) {
             EmployeeRequest::create([
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
