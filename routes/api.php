@@ -13,3 +13,5 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/employee/register', [EmployeeRequestController::class, 'register']);
 Route::post('/employee/login', [EmployeeController::class, 'login']);
+Route::post('/employee/{employee_id}/add_license', [EmployeeController::class, 'add_license']);
+

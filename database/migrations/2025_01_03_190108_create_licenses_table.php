@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('licenses', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('id')->primary();
             $table->string('first_name');
             $table->string('middle_name');
             $table->string('last_name');

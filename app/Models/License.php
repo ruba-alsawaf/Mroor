@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class License extends Model
 {
     protected $fillable = [
+        'id',
         'first_name',
         'middle_name',
         'last_name',

@@ -2,27 +2,70 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use APP\Models\License;
 use App\Models\Employee;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+
 class EmployeeController extends Controller
 {
     public function login(Request $request)
     {
-        $email = $request->query('email');
-        $password = $request->query('password');
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        if (!$email || !$password) {
-            return response()->json(['error' => 'Missing email or password'], 400);
+        $employee = Employee::where('email', $request->email)->first();
+
+        if (!$employee || !Hash::check($request->password, $employee->password)) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
         }
 
-        if ($email === 'ruba@mroor.com' && $password === '11111111') {
-            return response()->json(['message' => 'Login successful'], 200);
-        }
+        $token = $employee->createToken('employee_token')->plainTextToken;
 
-        return response()->json(['error' => 'Invalid credentials'], 401);
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ]);
+
     }
+
+    public function add_license(Request $request, $employee_id)
+   {
+
+       $validator = Validator::make($request->all(), [
+        'id' =>'required|integer|unique:licenses,id',
+        'first_name' => 'required|string|max:50',
+        'middle_name' => 'required|string|max:50',
+        'last_name' => 'required|string|max:50',
+        'national_id' => 'required|string|unique:licenses,national_id',
+        'email' => 'required|email|unique:licenses,email',
+        'points' => 'required|integer|min:0|max:25',
+        'expiration_date' => 'required|date',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    $employee = Employee::find($employee_id);
+
+    if (!$employee) {
+        return response()->json(['error' => 'Employee not found'], 404);
+    }
+
+    $license = $employee->licenses()->create($validator->validated());
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'License added successfully',
+        'data' => $license
+    ], 201);
+    }
+
 
 }
