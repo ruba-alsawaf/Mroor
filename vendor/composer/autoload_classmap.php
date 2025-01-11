@@ -6,14 +6,18 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Http\\Controllers\\CityController' => $baseDir . '/app/Http/Controllers/CityController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\EmployeeController' => $baseDir . '/app/Http/Controllers/EmployeeController.php',
     'App\\Http\\Controllers\\EmployeeRequestController' => $baseDir . '/app/Http/Controllers/EmployeeRequestController.php',
     'App\\Http\\Controllers\\LicenseController' => $baseDir . '/app/Http/Controllers/LicenseController.php',
+    'App\\Http\\Controllers\\VehicleController' => $baseDir . '/app/Http/Controllers/VehicleController.php',
+    'App\\Models\\City' => $baseDir . '/app/Models/City.php',
     'App\\Models\\Employee' => $baseDir . '/app/Models/Employee.php',
     'App\\Models\\EmployeeRequest' => $baseDir . '/app/Models/EmployeeRequest.php',
     'App\\Models\\License' => $baseDir . '/app/Models/License.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
+    'App\\Models\\Vehicle' => $baseDir . '/app/Models/Vehicle.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Brick\\Math\\BigDecimal' => $vendorDir . '/brick/math/src/BigDecimal.php',

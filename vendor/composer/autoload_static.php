@@ -521,14 +521,18 @@ class ComposerStaticInitf60f8b6e279e6de64f92f6b9fb420141
     );
 
     public static $classMap = array (
+        'App\\Http\\Controllers\\CityController' => __DIR__ . '/../..' . '/app/Http/Controllers/CityController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\EmployeeController' => __DIR__ . '/../..' . '/app/Http/Controllers/EmployeeController.php',
         'App\\Http\\Controllers\\EmployeeRequestController' => __DIR__ . '/../..' . '/app/Http/Controllers/EmployeeRequestController.php',
         'App\\Http\\Controllers\\LicenseController' => __DIR__ . '/../..' . '/app/Http/Controllers/LicenseController.php',
+        'App\\Http\\Controllers\\VehicleController' => __DIR__ . '/../..' . '/app/Http/Controllers/VehicleController.php',
+        'App\\Models\\City' => __DIR__ . '/../..' . '/app/Models/City.php',
         'App\\Models\\Employee' => __DIR__ . '/../..' . '/app/Models/Employee.php',
         'App\\Models\\EmployeeRequest' => __DIR__ . '/../..' . '/app/Models/EmployeeRequest.php',
         'App\\Models\\License' => __DIR__ . '/../..' . '/app/Models/License.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
+        'App\\Models\\Vehicle' => __DIR__ . '/../..' . '/app/Models/Vehicle.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',
