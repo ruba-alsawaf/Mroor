@@ -11,7 +11,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/employee/register', [EmployeeRequestController::class, 'register']);
-Route::post('/employee/login', [EmployeeController::class, 'login']);
-Route::post('/employee/{employee_id}/add_license', [EmployeeController::class, 'add_license']);
+Route::post('/employee/register', [EmployeeController::class, 'register']);
+Route::post('/approve-request/{id}', [EmployeeController::class, 'approveRequest']);
+// Route::post('/employee/login', [EmployeeController::class, 'login']);
+// Route::post('/employee/{employee_id}/add_license', [EmployeeController::class, 'add_license']);
+
 

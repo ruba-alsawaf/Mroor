@@ -2,70 +2,81 @@
 
 namespace App\Http\Controllers;
 
-use APP\Models\License;
-use App\Models\Employee;
+use App\Models\EmployeeRequest;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use App\Mail\EmployeeRegistrationRequest;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Employee;
+use App\Mail\EmployeeApprovedMail;
+use App\Mail\ApprovalMail;
 
 class EmployeeController extends Controller
 {
-    public function login(Request $request)
+    // public function register(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'required|email|unique:employee_requests,email',
+    //         'password' => 'required|string|min:8',
+    //     ]);
+
+    //     $employeeRequest = EmployeeRequest::create([
+    //         'email' => $request->email,
+    //         'password' => bcrypt($request->password),
+    //         'status' => 'pending',
+    //     ]);
+
+    //     Mail::to('rubaalsawaf2003@gmail.com')->send(new EmployeeRegistrationRequest($employeeRequest));
+
+    //     return response()->json(['message' => 'Registration request has been sent successfully, awaiting approval.'], 200);
+    // }
+    public function register(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+        $validated = Validator::make($request->all(), [
+            'email' => 'required|string|max:255|unique:employee_requests',
+            'password' => 'required|string|min:8',
         ]);
 
-        $employee = Employee::where('email', $request->email)->first();
-
-        if (!$employee || !Hash::check($request->password, $employee->password)) {
-            return response()->json(['error' => 'Invalid credentials'], 401);
+        if ($validated->fails()) {
+            return response()->json(['errors' => $validated->errors()], 422);
         }
 
-        $token = $employee->createToken('employee_token')->plainTextToken;
+            EmployeeRequest::create([
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+            ]);
 
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
+            return response()->json(['message' => 'Your request has been submitted successfully. Wait for acceptance.']);
+        }
+        public function approveRequest($id)
+{
+    $employeeRequest = EmployeeRequest::find($id);
 
+    if (!$employeeRequest) {
+        return response()->json(['message' => 'Request not found'], 404);
     }
 
-    public function add_license(Request $request, $employee_id)
-   {
-
-       $validator = Validator::make($request->all(), [
-        'id' =>'required|integer|unique:licenses,id',
-        'first_name' => 'required|string|max:50',
-        'middle_name' => 'required|string|max:50',
-        'last_name' => 'required|string|max:50',
-        'national_id' => 'required|string|unique:licenses,national_id',
-        'email' => 'required|email|unique:licenses,email',
-        'points' => 'required|integer|min:0|max:25',
-        'expiration_date' => 'required|date',
+    $employee = Employee::create([
+        'email' => $employeeRequest->email,
+        'password' => $employeeRequest->password,
     ]);
 
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors()], 422);
+    $employeeRequest->delete();
+
+    try {
+        Mail::to($employee->email)->send(new EmployeeApprovedMail($employee));
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Employee approved but email not sent',
+            'error' => $e->getMessage()
+        ], 500);
     }
-
-    $employee = Employee::find($employee_id);
-
-    if (!$employee) {
-        return response()->json(['error' => 'Employee not found'], 404);
-    }
-
-    $license = $employee->licenses()->create($validator->validated());
 
     return response()->json([
-        'status' => 'success',
-        'message' => 'License added successfully',
-        'data' => $license
-    ], 201);
-    }
+        'message' => 'Employee approved and email sent successfully',
+        'email' => $employee->email
+    ]);
+}
 
 
 }
