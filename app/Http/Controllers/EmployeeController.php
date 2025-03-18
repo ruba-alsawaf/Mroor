@@ -23,7 +23,6 @@ class EmployeeController extends Controller
     //     $employeeRequest = EmployeeRequest::create([
     //         'email' => $request->email,
     //         'password' => bcrypt($request->password),
-    //         'status' => 'pending',
     //     ]);
 
     //     Mail::to('rubaalsawaf2003@gmail.com')->send(new EmployeeRegistrationRequest($employeeRequest));
@@ -37,6 +36,7 @@ class EmployeeController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
+
         if ($validated->fails()) {
             return response()->json(['errors' => $validated->errors()], 422);
         }
@@ -48,35 +48,31 @@ class EmployeeController extends Controller
 
             return response()->json(['message' => 'Your request has been submitted successfully. Wait for acceptance.']);
         }
-        public function approveRequest($id)
-{
-    $employeeRequest = EmployeeRequest::find($id);
+    public function approveRequest($id)
+    {
+        $employeeRequest = EmployeeRequest::findOrFail($id);
 
-    if (!$employeeRequest) {
-        return response()->json(['message' => 'Request not found'], 404);
-    }
+        $employee = Employee::create([
+            'email' => $employeeRequest->email,
+            'password' => $employeeRequest->password,
+        ]);
 
-    $employee = Employee::create([
-        'email' => $employeeRequest->email,
-        'password' => $employeeRequest->password,
-    ]);
+        $employeeRequest->delete();
 
-    $employeeRequest->delete();
+        try {
+            Mail::to($employee->email)->send(new EmployeeApprovedMail($employee));
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Employee approved, but the email could not be sent',
+                'error' => $e->getMessage()
+            ], 500);
+        }
 
-    try {
-        Mail::to($employee->email)->send(new EmployeeApprovedMail($employee));
-    } catch (\Exception $e) {
         return response()->json([
-            'message' => 'Employee approved but email not sent',
-            'error' => $e->getMessage()
-        ], 500);
+            'message' => 'Employee approved and email sent successfully',
+            'email' => $employee->email
+        ], 200);
     }
-
-    return response()->json([
-        'message' => 'Employee approved and email sent successfully',
-        'email' => $employee->email
-    ]);
-}
 
 
 }
