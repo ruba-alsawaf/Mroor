@@ -13,6 +13,7 @@ use App\Mail\EmployeeApprovedMail;
 use App\Mail\ApprovalMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Exception;
 
 class EmployeeController extends Controller
 {
