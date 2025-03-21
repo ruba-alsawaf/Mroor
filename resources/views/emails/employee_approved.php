@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Employee Registration Request</title>
+    <title>Account Approved</title>
 </head>
 <body>
-    <h2>New Employee Registration Request</h2>
-    <p>Email: {{ $employeeRequest->email }}</p>
-    <p>Please review the request in the admin panel.</p>
+    <h2>Congratulations!</h2>
+    <p>Your account has been approved.</p>
+    <p>You can now log in using your email: <strong>{{ $email }}</strong></p>
+    <p>Best regards,</p>
+    <p>Ruba Team</p>
 </body>
 </html>

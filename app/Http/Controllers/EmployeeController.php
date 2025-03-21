@@ -13,6 +13,7 @@ use App\Mail\EmployeeApprovedMail;
 use App\Mail\ApprovalMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Exception;
 
 class EmployeeController extends Controller
 {
@@ -26,7 +27,6 @@ class EmployeeController extends Controller
     //     $employeeRequest = EmployeeRequest::create([
     //         'email' => $request->email,
     //         'password' => bcrypt($request->password),
-    //         'status' => 'pending',
     //     ]);
 
     //     Mail::to('rubaalsawaf2003@gmail.com')->send(new EmployeeRegistrationRequest($employeeRequest));
@@ -39,6 +39,7 @@ class EmployeeController extends Controller
             'email' => 'required|string|max:255|unique:employee_requests',
             'password' => 'required|string|min:8',
         ]);
+
 
         if ($validated->fails()) {
             return response()->json(['errors' => $validated->errors()], 422);
@@ -100,6 +101,7 @@ class EmployeeController extends Controller
         } else {
             return response()->json(['message' => 'Weclome!']);
         }
+
 
     }
 }
