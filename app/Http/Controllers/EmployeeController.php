@@ -98,7 +98,7 @@ class EmployeeController extends Controller
         } else if (! Hash::check($request->password, $employee->password)) {
             return response()->json(['message' => 'Wrong password'], 401);
         } else {
-            return redirect('/');
+            return response()->json(['message' => 'Weclome!']);
         }
 
     }
