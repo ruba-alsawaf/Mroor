@@ -14,28 +14,15 @@ use App\Mail\ApprovalMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Exception;
+use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
 {
-    // public function register(Request $request)
-    // {
-    //     $request->validate([
-    //         'email' => 'required|email|unique:employee_requests,email',
-    //         'password' => 'required|string|min:8',
-    //     ]);
-
-    //     $employeeRequest = EmployeeRequest::create([
-    //         'email' => $request->email,
-    //         'password' => bcrypt($request->password),
-    //     ]);
-
-    //     Mail::to('rubaalsawaf2003@gmail.com')->send(new EmployeeRegistrationRequest($employeeRequest));
-
-    //     return response()->json(['message' => 'Registration request has been sent successfully, awaiting approval.'], 200);
-    // }
     public function register(Request $request)
     {
         $validated = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:20',
+            'last_name' => 'required|string|max:20',
             'email' => 'required|string|max:255|unique:employee_requests',
             'password' => 'required|string|min:8',
         ]);
@@ -46,23 +33,36 @@ class EmployeeController extends Controller
         }
 
         EmployeeRequest::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => $request->password,
         ]);
 
         return response()->json(['message' => 'Your request has been submitted successfully. Wait for acceptance.']);
     }
-    public function approveRequest($id)
+    public function approveRequest(Request $request, $id)
     {
+        $validated = $request->validate([
+            'role' => [
+                'required',
+                Rule::in(['Police', 'CertOfficer', 'ViolationOfficer']),
+            ],
+        ]);
+
         $employeeRequest = EmployeeRequest::find($id);
 
         if (!$employeeRequest) {
             return response()->json(['message' => 'Request not found'], 404);
         }
 
+
         $employee = Employee::create([
+            'first_name' => $employeeRequest->first_name,
+            'last_name' => $employeeRequest->last_name,
             'email' => $employeeRequest->email,
             'password' => $employeeRequest->password,
+            'role' => $validated['role'],
         ]);
 
         $employeeRequest->delete();

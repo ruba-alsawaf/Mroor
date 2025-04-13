@@ -13,8 +13,21 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
+            $table->enum('role', allowed: ['Police', 'CertOfficer', 'ViolationOfficer']);
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('national_id')->unique()->nullable();
+            $table->date('birth_date')->nullable();
+            $table->enum('gender', ['Male', 'Female', 'Other']);
+            $table->string('nationality')->nullable();
+            $table->string('profile_image')->nullable();
+            $table->string('phone_number')->unique()->nullable();
+            $table->string('street_address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->nullable();
             $table->timestamps();
         });
     }

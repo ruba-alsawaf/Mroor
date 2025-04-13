@@ -13,6 +13,8 @@ return new class extends Migration
 {
     Schema::create('employee_requests', function (Blueprint $table) {
         $table->id();
+        $table->string('first_name');
+        $table->string('last_name');
         $table->string('email')->unique();
         $table->string('password');
         $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');

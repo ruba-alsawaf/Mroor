@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class EmployeeRequest extends Model
 {
 
-    protected $fillable = ['email', 'password', 'status'];
+    protected $fillable = ['first_name','last_name','email', 'password', 'status'];
 
     protected $hidden = [
         'password',
