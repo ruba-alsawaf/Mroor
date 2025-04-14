@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('country')->nullable();
             $table->timestamps();
+            $table->string('access_token', 80)->unique()->nullable()->default(null);
         });
     }
 

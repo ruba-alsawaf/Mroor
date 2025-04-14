@@ -37,6 +37,7 @@ class EmployeeController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => $request->password,
+            'api_token' => Str::random(60)
         ]);
 
         return response()->json(['message' => 'Your request has been submitted successfully. Wait for acceptance.']);
@@ -99,7 +100,7 @@ class EmployeeController extends Controller
         } else if (! Hash::check($request->password, $employee->password)) {
             return response()->json(['message' => 'Wrong password'], 401);
         } else {
-            return response()->json(['message' => 'Weclome!']);
+            return response()->json(['message' => $employee->access_token]);
         }
 
 
